@@ -5,6 +5,11 @@ from django.shortcuts import render, redirect
 from .forms import UserCreationForm
 from .forms import ProjectForm
 from .models import Project
+from django.http import HttpResponse
+
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render
+from django.http import HttpResponse
 
 def user_login(request):
     if request.method == 'POST':
@@ -12,8 +17,14 @@ def user_login(request):
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
-            login(request, user)
-            return render(request, 'main.html') # Redirect to home page after successful login
+            login(request, User)
+            
+            # Get the user's PRN
+            prn = User.prn
+            
+            # Render the main.html template and pass the PRN to it
+            return render(request, 'main.html', {'prn': prn}) 
+            
         else:
             # Handle invalid login
             return render(request, 'login.html', {'error': 'Invalid credentials'})
@@ -24,16 +35,13 @@ def create_user(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
+            # Save the form data to the User model
             form.save()
-            # Optionally, you can log the user in immediately after registration
-            # username = form.cleaned_data.get('username')
-            # password = form.cleaned_data.get('password1')
-            # user = authenticate(username=username, password=password)
-            # login(request, user)
             return redirect('login')  # Redirect to login page after successful registration
     else:
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
+
 
 
 def create_project(request):

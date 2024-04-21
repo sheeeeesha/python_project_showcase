@@ -151,4 +151,14 @@
 
 
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Get the PRN from the context passed by Django
+      var prn = "{{ prn }}";
+      
+      // Store the PRN in local storage
+      localStorage.setItem('prn', prn);
+  });
+</script>
+
 </html>
