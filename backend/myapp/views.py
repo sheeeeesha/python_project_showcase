@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from .forms import UserCreationForm
 from .forms import ProjectForm
 from .models import Project
+from django.contrib.auth.decorators import login_required
 
 def user_login(request):
     if request.method == 'POST':
@@ -65,7 +66,12 @@ def available_projects(request):
     return render(request, 'available_projects.html', {'projects': projects})
 
 def profile(request):
-    return render(request, 'index.html')
+    user = request.user  # Get the currently logged-in user
+    context = {
+     'user': user
+        }
+    print(context)
+    return render(request, 'index.html',context)
 def home(request):
     return render(request,'main.html')
 

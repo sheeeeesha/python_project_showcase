@@ -51,13 +51,13 @@
                 <div class="account">
                     <span id="notifications-icon" class="material-symbols-outlined">notifications_active</span>
                     <img id="account-image" src="{% static 'morgan.png' %}" alt="">
-                    <span id="account-name">Morgan Oakley</span>
+                    <span id="account-name">{{ user.username }}</span>
                 </div>
 
                 <div class="greeting">
                     <img id="account-image" src="{% static 'morgan.png' %}" alt="">
                     <div id="greeting-name">
-                        <div id="morgan"><span id="hithere">Hi there,</span><br><span id="hitheremorgan">Morgan Oakley (@morgan)</span></div>
+                        <div id="morgan"><span id="hithere">Hi there,</span><br><span id="hitheremorgan">{{ user.username }}</span></div>
                     </div>
                 </div>
 
