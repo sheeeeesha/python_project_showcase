@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Project</title>
+    <link rel="stylesheet" href="{% static 'create_project.css' %}"> 
+</head>
+<body>
+
+      <!-- Navbar -->
+  <nav class="navbar">
+    <div class="container">
+      <span class="logo">Your Logo</span>
+      <ul class="nav-links">
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
+        <li><a href="#"></a></li>
+      </ul>
+    </div>
+  </nav>
+
+
+    <div class="flex text1 justify-center">
+        <div><h1>Create a project</h1></div>
+    </div>
+    <div class="flex justify-center ">
+        <div class="flex creation-box justify-center ">
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+                <div class="lab">
+                    <br><br>
+                  <label class="justify-center" for="projectName">Project Name:</label><br>
+                  <input type="text" id="project_name" name="project_name" required><br><br>
+            
+                  <label for="project_desc">Project Description:</label><br>
+                  <textarea id="project_desc" name="project_desc" rows="4" cols="50" required></textarea><br><br>
+            
+                  <label for="num_people_required">Members Required:</label><br>
+                  <input type="number" id="num_people_required" name="num_people_required" required><br><br>
+            
+                  <label for="start_date">Start Date:</label><br>
+                  <input type="date" id="start_date" name="start_date" required><br><br>
+            
+                  <label for="pidd">Project ID:</label><br>
+                  <input type="text" id="pid" name="pid" required><br><br>
+            
+                  <label for="thumbnail">Thumbnail:</label><br>
+                  <input type="file" id="thumbnail" name="thumbnail" accept="image/*" required><br><br>
+            
+                  <label for="tags">Tags (comma separated):</label><br>
+                  <input type="text" id="tags" name="tags"><br><br>
+                </div>
+                
+
+                <div class="flex sub justify-center">
+                <button type="submit">Create Project</button>
+
+                </div>
+            </form>
+        
+        </div>
+    </div>
+    
+</body>
+</html>

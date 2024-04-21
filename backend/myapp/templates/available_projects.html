@@ -1,0 +1,43 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Projects</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'available_projects.css'%}">
+</head>
+<body>
+    <h1>Available Projects</h1>
+    <div class="flex ava_proj">
+        {% for project in projects %}
+    <div class="flex project-details-box justify-center item-center">
+        {% if project.has_thumbnail %}
+            <style>
+                .project-thumbnail {
+                    background-image: url('{{ project.thumbnail.url }}');
+                }
+            </style>
+        {% endif %}
+        <div class="flex project-thumbnail">
+            <div class="flex lbox justify-center item-center">
+                <strong>Project Name:</strong> {{ project.project_name }}<br>
+                <strong>Project Description:</strong> {{ project.project_desc }}<br>
+            </div>
+            {% if not project.has_thumbnail %}
+                
+                <div class="flex lbox justify-center item-center">
+                    
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% empty %}
+    <li>No projects available.</li>
+{% endfor %}
+
+    </div>
+        
+    
+</body>
+</html>
