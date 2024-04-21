@@ -64,6 +64,8 @@ def available_projects(request):
         project.has_thumbnail = bool(project.thumbnail)  # Check if project has a thumbnail
     return render(request, 'available_projects.html', {'projects': projects})
 
-
-
+def profile(request):
+    return render(request, 'index.html')
+def home(request):
+    return render(request,'main.html')
 
