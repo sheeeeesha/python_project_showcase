@@ -1,0 +1,11 @@
+
+{% block content %}
+<div class="login-form">
+    <h2>Login to Admin Panel</h2>
+    <form method="post" action="{% url 'admin:login' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+</div>
+{% endblock %}

@@ -5,7 +5,12 @@ from django.shortcuts import render, redirect
 from .forms import UserCreationForm
 from .forms import ProjectForm
 from .models import Project
+from .models import ProjectUser
 from django.contrib.auth.decorators import login_required
+from django.db import models
+
+
+
 
 def user_login(request):
     if request.method == 'POST':
@@ -42,7 +47,7 @@ def create_project(request):
         form = ProjectForm(request.POST, request.FILES)  # Include request.FILES for file upload
         if form.is_valid():
             form.save()  # Save the project object along with the uploaded thumbnail image
-            return redirect('available_projects')  
+            return redirect('profile')  
     else:
         form = ProjectForm()
     return render(request, 'create_project.html', {'form': form})
@@ -65,13 +70,24 @@ def available_projects(request):
         project.has_thumbnail = bool(project.thumbnail)  # Check if project has a thumbnail
     return render(request, 'available_projects.html', {'projects': projects})
 
-def profile(request):
-    user = request.user  # Get the currently logged-in user
-    context = {
-     'user': user
+
+@login_required
+def profile(request): 
+
+        user = request.user
+       # if user.is_authenticated:
+       #     projects = ProjectUser.objects.filter(user=request.user)
+       # else:
+        #    projects = None 
+        
+        context = {
+            'user' : user,
+           # 'projects': projects,
         }
-    print(context)
-    return render(request, 'index.html',context)
+        return render(request, 'index.html', context)
+
 def home(request):
     return render(request,'main.html')
+
+    
 
