@@ -1,19 +1,24 @@
+from django.contrib import admin
 from django.urls import path
 from myapp import views
-from django.conf import settings
 from django.conf.urls.static import static
+from django.conf import settings
+
+
 
 urlpatterns = [
     path('', views.user_login, name='login'),
     path('create_user/', views.create_user, name='create_user'),
     path('create_project/', views.create_project, name='create_project'),
     #path('join_project/', views.join_project, name='join_project'),
+    path('available_projects/<str:project_id>/join/', views.send_join_request, name='send_join_request'),
     path('available_projects/', views.available_projects, name='available_projects'),
     path('profile/', views.profile, name='profile'),
     path('home/', views.home, name='home'),
+    path('admin/', admin.site.urls, name='admin'),
 
     # Add more URL patterns as needed
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]+static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
 """

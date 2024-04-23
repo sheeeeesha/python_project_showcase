@@ -16,6 +16,11 @@
                     <div class="flex lbox justify-center item-center">
                         <strong>Project Name:</strong> {{ project.project_name }}<br>
                         <strong>Project Description:</strong> {{ project.project_desc }}<br>
+                        <!-- Add a form to submit the join request -->
+                         <form method="post" action="{% url 'send_join_request' project.pid %}">
+                            {% csrf_token %}
+                                <input type="submit" value="JOIN REQUEST" style="color: aliceblue; background-color: blueviolet; height: 40px; width: 200px; border-radius: 10px; opacity: 0.7; font-weight: bold;">
+                         </form>
                     </div>
                 </div>
             </div>

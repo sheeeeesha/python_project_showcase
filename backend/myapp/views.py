@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
@@ -41,13 +41,12 @@ def create_user(request):
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
 
-
 def create_project(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)  # Include request.FILES for file upload
         if form.is_valid():
             form.save()  # Save the project object along with the uploaded thumbnail image
-            return redirect('profile')  
+            return redirect('home')  
     else:
         form = ProjectForm()
     return render(request, 'create_project.html', {'form': form})
@@ -69,6 +68,30 @@ def available_projects(request):
     for project in projects:
         project.has_thumbnail = bool(project.thumbnail)  # Check if project has a thumbnail
     return render(request, 'available_projects.html', {'projects': projects})
+
+
+
+
+@login_required
+def send_join_request(request, project_id):
+    if request.method == 'POST':
+        project = get_object_or_404(Project, pk=project_id)
+        
+        # Fetch the actual user object
+        user = User.objects.get(email=request.user.email)
+        
+        # Check if the user has already sent a join request
+        if user in project.joinRequests.all():
+            return render(request, 'error.html', {'error_message': 'You have already sent a join request for this project.'})
+                
+        # Add the user to the joinRequests of the project
+        
+        project.joinRequests.add(user)
+        project.save()
+        
+        return redirect('available_projects')
+
+    return redirect('available_projects')
 
 
 @login_required
