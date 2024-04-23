@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='project',
             name='joinRequests',
-            field=models.ForeignKey(blank=True, default=datetime.datetime(2024, 4, 22, 21, 27, 49, 299944, tzinfo=datetime.timezone.utc), on_delete=django.db.models.deletion.CASCADE, related_name='join_requests', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(blank=True, default=1, on_delete=django.db.models.deletion.CASCADE, related_name='join_requests', to=settings.AUTH_USER_MODEL),
             preserve_default=False,
         ),
     ]
