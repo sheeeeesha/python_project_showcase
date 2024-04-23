@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Created Projects</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'available_projects.css' %}">
+</head>
+<body>
+    <h1>Created Projects</h1>
+    <div class="flex ava_proj">
+        {% for project in projects %}
+            <div class="flex project-details-box justify-center item-center">
+                <div class="flex project-thumbnail" style="background-image: url('{{ project.thumbnail.url }}')">
+                    <div class="flex lbox justify-center item-center">
+                        <strong>Project Name:</strong> {{ project.project_name }}<br>
+                        <strong>Project Description:</strong> {{ project.project_desc }}<br>
+                        
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <li>No projects available.</li>
+        {% endfor %}
+    </div>
+</body>
+</html>
