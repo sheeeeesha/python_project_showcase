@@ -1,15 +1,17 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login
+
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
+
 from .forms import UserCreationForm
 from .forms import ProjectForm
+
 from .models import Project
-from .models import ProjectUser
+from .models import JoinRequest
+
 from django.contrib.auth.decorators import login_required
 from django.db import models
-
-
 
 
 def user_login(request):
@@ -25,7 +27,9 @@ def user_login(request):
             return render(request, 'login.html', {'error': 'Invalid credentials'})
     else:
         return render(request, 'login.html')
-    
+
+
+
 def create_user(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -41,6 +45,9 @@ def create_user(request):
         form = UserCreationForm()
     return render(request, 'register.html', {'form': form})
 
+
+
+@login_required
 def create_project(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST, request.FILES)  # Include request.FILES for file upload
@@ -53,6 +60,7 @@ def create_project(request):
 
 
 
+@login_required
 def join_project(request):
     if request.method == 'POST':
         form = ProjectForm(request.POST)
@@ -63,6 +71,10 @@ def join_project(request):
         form = ProjectForm()
     return render(request, 'join_project.html', {'form': form})
 
+
+
+
+@login_required
 def available_projects(request):
     projects = Project.objects.all()
     for project in projects:
@@ -73,25 +85,63 @@ def available_projects(request):
 
 
 @login_required
+def user_projects(request): #created by current user
+    user = request.user
+    user_projects = Project.get_projects_created_by_user(user)
+    for project in user_projects:
+        project.has_thumbnail = bool(project.thumbnail)  # Check if project has a thumbnail
+    return render(request, 'created_projects.html', {'projects': user_projects})
+
+
+# managing and showing requests
+
+
+@login_required
 def send_join_request(request, project_id):
     if request.method == 'POST':
         project = get_object_or_404(Project, pk=project_id)
         
-        # Fetch the actual user object
-        user = User.objects.get(email=request.user.email)
-        
         # Check if the user has already sent a join request
-        if user in project.joinRequests.all():
+        if project.joinrequest_set.filter(user=request.user).exists():
             return render(request, 'error.html', {'error_message': 'You have already sent a join request for this project.'})
-                
-        # Add the user to the joinRequests of the project
         
-        project.joinRequests.add(user)
-        project.save()
+        # Add the join request
+        project.add_join_request(request.user)
         
         return redirect('available_projects')
 
     return redirect('available_projects')
+
+
+
+@login_required
+def user_join_requests(request):
+    current_user = request.user
+    join_requests = JoinRequest.get_requests_for_projects_created_by_user(current_user)
+    return render(request, 'join_requests.html', {'join_requests': join_requests})
+
+
+
+@login_required
+def accept_join_request(request, join_request_id):
+    join_request = get_object_or_404(JoinRequest, pk=join_request_id)
+    if request.method == 'POST':
+        # Accept the join request
+        join_request.accept(join_request)
+        return redirect('user_join_requests')  # Redirect to the user_join_requests page after accepting the request
+    return render(request, 'join_requests.html', {'join_request': join_request})
+
+
+
+@login_required
+def reject_join_request(request, join_request_id):
+    join_request = get_object_or_404(JoinRequest, pk=join_request_id)
+    if request.method == 'POST':
+        # Reject the join request
+        join_request.reject(join_request)
+        return redirect('user_join_requests')  # Redirect to the user_join_requests page after rejecting the request
+    return render(request, 'join_requests.html', {'join_request': join_request})
+
 
 
 @login_required
@@ -109,6 +159,9 @@ def profile(request):
         }
         return render(request, 'index.html', context)
 
+
+
+@login_required
 def home(request):
     return render(request,'main.html')
 

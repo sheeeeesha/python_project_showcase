@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Requests</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'join_requests.css' %}">
+</head>
+<body>
+    <h1>Join Requests</h1>
+    <div class="join-requests">
+        {% for join_request in join_requests %}
+            <div class="join-request">
+                <p>User: {{ join_request.user.username }}</p>
+                <p>Project: {{ join_request.project.project_name }}</p>
+                <p>Date Requested: {{ join_request.date_requested }}</p>
+                <div class="actions">
+                    <form method="post" action="{% url 'accept_join_request' join_request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="accept-button">Accept</button>
+                    </form>
+                    <form method="post" action="{% url 'reject_join_request' join_request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="reject-button">Reject</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
